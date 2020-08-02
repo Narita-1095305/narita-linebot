@@ -13,7 +13,7 @@ $signature = $_SERVER['HTTP_' . \LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATUR
 $events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
 // 配列に格納された各イベントをループで処理
 foreach ($events as $event) {
-	$bot -> replyText($event->getReplyToken(), 'TextMessage');
+	replyTextMessage($bot, $event->getReplyToken(), 'TextMessage');
 }
 
 // テキストを返信。引数はLINEBot、返信先、テキスト
