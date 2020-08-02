@@ -17,9 +17,10 @@ foreach ($events as $event) {
 	//replyImageMessage($bot, $event->getReplyToken(), 'https://' . $_SERVER['HTTP_HOST'] . '/imgs/original.jpg', 'https://' . $_SERVER['HTTP_HOST'] . '/imgs/preview.jpg');
 	//replyLocationMessage($bot, $event->getReplyToken(), 'LINE', '東京都渋谷区渋谷2-21-1 ヒカリエ27階', 35.659025, 139.703473);
 	//replyStickerMessage($bot, $event->getReplyToken(), 1, 1);
-	replyVideoMessage($bot, $event->getReplyToken(),
-	'https://' . $_SERVER['HTTP_HOST'] . '/videos/sample.mp4',
-	'https://' . $_SERVER['HTTP_HOST'] . '/videos/sample_preview.jpg');
+	//replyVideoMessage($bot, $event->getReplyToken(),
+	//'https://' . $_SERVER['HTTP_HOST'] . '/videos/sample.mp4',
+	//'https://' . $_SERVER['HTTP_HOST'] . '/videos/sample_preview.jpg');
+	replyAudioMessage($bot, $event->getReplyToken(), 'https://' . $_SERVER['HTTP_HOST'] . '/audios/sample.m4a', 6000);
 }
 
 // テキストを返信。引数はLINEBot、返信先、テキスト
