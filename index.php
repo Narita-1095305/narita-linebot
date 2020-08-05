@@ -31,6 +31,7 @@ foreach ($events as $event) {
   //);
   
    // Buttonsテンプレートメッセージを返信
+   /*
   replyButtonsTemplate($bot,
     $event->getReplyToken(),
     'お天気お知らせ - 今日は天気予報は晴れです',
@@ -46,6 +47,17 @@ foreach ($events as $event) {
     // タップ時、URLを開くアクション
     new LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder (
       'Webで見る', 'http://google.jp')
+  );
+  */
+  // Confirmテンプレートメッセージを返信
+  replyConfirmTemplate($bot,
+    $event->getReplyToken(),
+    'Webで詳しく見ますか？',
+    'Webで詳しく見ますか？',
+    new LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder (
+      '見る', 'http://google.jp'),
+    new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
+      '見ない', 'ignore')
   );
 }
 
@@ -140,6 +152,21 @@ function replyButtonsTemplate($bot, $replyToken, $alternativeText, $imageUrl, $t
     // ButtonTemplateBuilderの引数はタイトル、本文、
     // 画像URL、アクションの配列
     new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder ($title, $text, $imageUrl, $actionArray)
+  );
+  $response = $bot->replyMessage($replyToken, $builder);
+  if (!$response->isSucceeded()) {
+    error_log('Failed!'. $response->getHTTPStatus . ' ' . $response->getRawBody());
+  }
+}
+
+// Carouselテンプレートを返信。引数はLINEBot、返信先、代替テキスト、
+// ダイアログの配列
+function replyCarouselTemplate($bot, $replyToken, $alternativeText, $columnArray) {
+  $builder = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder(
+  $alternativeText,
+  // Carouselテンプレートの引数はダイアログの配列
+  new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder (
+   $columnArray)
   );
   $response = $bot->replyMessage($replyToken, $builder);
   if (!$response->isSucceeded()) {
