@@ -38,7 +38,7 @@ foreach ($events as $event) {
   //);
   
    // Buttonsテンプレートメッセージを返信
-  /* 
+   /*
   replyButtonsTemplate($bot,
     $event->getReplyToken(),
     'お天気お知らせ - 今日は天気予報は晴れです',
@@ -56,7 +56,6 @@ foreach ($events as $event) {
       'Webで見る', 'http://google.jp')
   );
   */
-  
   
   // Confirmテンプレートメッセージを返信
   replyConfirmTemplate($bot,
@@ -169,9 +168,28 @@ function replyButtonsTemplate($bot, $replyToken, $alternativeText, $imageUrl, $t
   }
 }
 
+
+// Confirmテンプレートを返信。引数はLINEBot、返信先、代替テキスト、
+// 本文、アクション(可変長引数)
+function replyConfirmTemplate($bot, $replyToken, $alternativeText, $text, ...$actions) {
+  $actionArray = array();
+  foreach($actions as $value) {
+    array_push($actionArray, $value);
+  }
+  $builder = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder(
+    $alternativeText,
+    // Confirmテンプレートの引数はテキスト、アクションの配列
+    new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder ($text, $actionArray)
+  );
+  $response = $bot->replyMessage($replyToken, $builder);
+  if (!$response->isSucceeded()) {
+    error_log('Failed!'. $response->getHTTPStatus . ' ' . $response->getRawBody());
+  }
+}
+
 // Carouselテンプレートを返信。引数はLINEBot、返信先、代替テキスト、
 // ダイアログの配列
-function replyConfirmTemplate($bot, $replyToken, $alternativeText, $columnArray) {
+function replyCarouselTemplate($bot, $replyToken, $alternativeText, $columnArray) {
   $builder = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder(
   $alternativeText,
   // Carouselテンプレートの引数はダイアログの配列
