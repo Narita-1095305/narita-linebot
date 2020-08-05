@@ -23,11 +23,29 @@ foreach ($events as $event) {
 	//replyAudioMessage($bot, $event->getReplyToken(), 'https://' . $_SERVER['HTTP_HOST'] . '/audios/sample.m4a', 6000);
 	
 	  // 複数のメッセージをまとめて返信
-  replyMultiMessage($bot, $event->getReplyToken(),
-    new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('TextMessage'),
-    new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder('https://' . $_SERVER['HTTP_HOST'] . '/imgs/original.jpg', 'https://' . $_SERVER['HTTP_HOST'] . '/imgs/preview.jpg'),
-    new \LINE\LINEBot\MessageBuilder\LocationMessageBuilder('LINE', '東京都渋谷区渋谷2-21-1 ヒカリエ27階', 35.659025, 139.703473),
-    new \LINE\LINEBot\MessageBuilder\StickerMessageBuilder(1, 1)
+  //replyMultiMessage($bot, $event->getReplyToken(),
+  //  new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('TextMessage'),
+  //  new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder('https://' . $_SERVER['HTTP_HOST'] . '/imgs/original.jpg', 'https://' . $_SERVER['HTTP_HOST'] . '/imgs/preview.jpg'),
+  //  new \LINE\LINEBot\MessageBuilder\LocationMessageBuilder('LINE', '東京都渋谷区渋谷2-21-1 ヒカリエ27階', 35.659025, 139.703473),
+  //  new \LINE\LINEBot\MessageBuilder\StickerMessageBuilder(1, 1)
+  //);
+  
+   // Buttonsテンプレートメッセージを返信
+  replyButtonsTemplate($bot,
+    $event->getReplyToken(),
+    'お天気お知らせ - 今日は天気予報は晴れです',
+    'https://' . $_SERVER['HTTP_HOST'] . '/imgs/template.jpg',
+    'お天気お知らせ',
+    '今日は天気予報は晴れです',
+    // タップ時、テキストをユーザーに発言させるアクション
+    new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
+      '明日の天気', 'tomorrow'),
+    // タップ時、テキストをBotに送信するアクション(トークには表示されない)
+    new LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder (
+      '週末の天気', 'weekend'),
+    // タップ時、URLを開くアクション
+    new LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder (
+      'Webで見る', 'http://google.jp')
   );
 }
 
@@ -101,6 +119,28 @@ function replyMultiMessage($bot, $replyToken, ...$msgs) {
   foreach($msgs as $value) {
     $builder->add($value);
   }
+  $response = $bot->replyMessage($replyToken, $builder);
+  if (!$response->isSucceeded()) {
+    error_log('Failed!'. $response->getHTTPStatus . ' ' . $response->getRawBody());
+  }
+}
+
+// Buttonsテンプレートを返信。引数はLINEBot、返信先、代替テキスト、
+// 画像URL、タイトル、本文、アクション(可変長引数)
+function replyButtonsTemplate($bot, $replyToken, $alternativeText, $imageUrl, $title, $text, ...$actions) {
+  // アクションを格納する配列
+  $actionArray = array();
+  // アクションを全て追加
+  foreach($actions as $value) {
+    array_push($actionArray, $value);
+  }
+  // TemplateMessageBuilderの引数は代替テキスト、ButtonTemplateBuilder
+  $builder = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder(
+    $alternativeText,
+    // ButtonTemplateBuilderの引数はタイトル、本文、
+    // 画像URL、アクションの配列
+    new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder ($title, $text, $imageUrl, $actionArray)
+  );
   $response = $bot->replyMessage($replyToken, $builder);
   if (!$response->isSucceeded()) {
     error_log('Failed!'. $response->getHTTPStatus . ' ' . $response->getRawBody());
