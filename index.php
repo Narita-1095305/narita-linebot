@@ -38,7 +38,7 @@ foreach ($events as $event) {
   //);
   
    // Buttonsテンプレートメッセージを返信
-   
+  /* 
   replyButtonsTemplate($bot,
     $event->getReplyToken(),
     'お天気お知らせ - 今日は天気予報は晴れです',
@@ -55,8 +55,9 @@ foreach ($events as $event) {
     new LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder (
       'Webで見る', 'http://google.jp')
   );
+  */
   
-  /*
+  
   // Confirmテンプレートメッセージを返信
   replyConfirmTemplate($bot,
     $event->getReplyToken(),
@@ -67,7 +68,7 @@ foreach ($events as $event) {
     new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
       '見ない', 'ignore')
   );
-  */
+  
 }
 
 // テキストを返信。引数はLINEBot、返信先、テキスト
@@ -170,7 +171,7 @@ function replyButtonsTemplate($bot, $replyToken, $alternativeText, $imageUrl, $t
 
 // Carouselテンプレートを返信。引数はLINEBot、返信先、代替テキスト、
 // ダイアログの配列
-function replyCarouselTemplate($bot, $replyToken, $alternativeText, $columnArray) {
+function replyConfirmTemplate($bot, $replyToken, $alternativeText, $columnArray) {
   $builder = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder(
   $alternativeText,
   // Carouselテンプレートの引数はダイアログの配列
