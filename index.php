@@ -13,6 +13,13 @@ $signature = $_SERVER['HTTP_' . \LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATUR
 $events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
 // 配列に格納された各イベントをループで処理
 foreach ($events as $event) {
+	// イベントがPostbackEventクラスのインスタンスであれば
+	if ($event instanceof \LINE\LINEBot\Event\PostbackEvent) {
+	// テキストを返信し次のイベントの処理へ
+		replyTextMessage($bot, $event->getReplyToken(), 'Postback受信「' . $event->getPostbackData() . '」');
+		continue;
+	}
+	
 	//replyTextMessage($bot, $event->getReplyToken(), 'TextMessage');
 	//replyImageMessage($bot, $event->getReplyToken(), 'https://' . $_SERVER['HTTP_HOST'] . '/imgs/original.jpg', 'https://' . $_SERVER['HTTP_HOST'] . '/imgs/preview.jpg');
 	//replyLocationMessage($bot, $event->getReplyToken(), 'LINE', '東京都渋谷区渋谷2-21-1 ヒカリエ27階', 35.659025, 139.703473);
@@ -31,7 +38,7 @@ foreach ($events as $event) {
   //);
   
    // Buttonsテンプレートメッセージを返信
-   /*
+   
   replyButtonsTemplate($bot,
     $event->getReplyToken(),
     'お天気お知らせ - 今日は天気予報は晴れです',
@@ -48,8 +55,8 @@ foreach ($events as $event) {
     new LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder (
       'Webで見る', 'http://google.jp')
   );
-  */
   
+  /*
   // Confirmテンプレートメッセージを返信
   replyConfirmTemplate($bot,
     $event->getReplyToken(),
@@ -60,7 +67,7 @@ foreach ($events as $event) {
     new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
       '見ない', 'ignore')
   );
-  
+  */
 }
 
 // テキストを返信。引数はLINEBot、返信先、テキスト
