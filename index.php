@@ -49,6 +49,7 @@ foreach ($events as $event) {
       'Webで見る', 'http://google.jp')
   );
   */
+  
   // Confirmテンプレートメッセージを返信
   replyConfirmTemplate($bot,
     $event->getReplyToken(),
@@ -59,6 +60,7 @@ foreach ($events as $event) {
     new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
       '見ない', 'ignore')
   );
+  
 }
 
 // テキストを返信。引数はLINEBot、返信先、テキスト
